@@ -8,28 +8,37 @@ function App() {
   const [micStream, setMicStream] = useState<MediaStream | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // 🎙️ Enable microphone and then play music
+  // 🎵 Ensure audio element exists in DOM for mobile autoplay
+  const ensureAudioElement = () => {
+    if (!audioRef.current) {
+      const audio = new Audio("/birthday.mp3"); // must be in public/
+      audio.loop = true;
+      audio.volume = 0.4;
+      audioRef.current = audio;
+    }
+  };
+
+  // 🎙️ Handle button click: request mic, then play music, then show cake
   const handleTurnOnLights = async () => {
     try {
-      // Request microphone first
+      // ✅ Ensure audio element exists
+      ensureAudioElement();
+
+      // Request microphone first (must be after user tap)
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       setMicStream(stream);
 
-      // Only play music after mic is allowed
-      if (!audioRef.current) {
-        const audio = new Audio("/birthday.mp3"); // Put mp3 in public/
-        audio.loop = true;
-        audio.volume = 0.4;
-        await audio.play();
-        audioRef.current = audio;
-      } else {
-        audioRef.current.currentTime = 0;
+      // Now we can play music (mobile requires user gesture)
+      if (audioRef.current) {
         await audioRef.current.play();
       }
 
+      // Finally, show the cake
       setLightsOn(true);
     } catch (err) {
-      alert("allow the microphone Perry! it will not kill you I promise :)");
+      alert(
+        "Please allow microphone access! It’s required to blow the candles 🎤"
+      );
       console.error(err);
     }
   };
@@ -42,13 +51,12 @@ function App() {
             Turn on the lights
           </button>
           <p className="landing-sub">(Allow microphone when asked)</p>
+          {/* Hidden audio element in DOM so mobile allows playback */}
+          <audio ref={audioRef} src="/birthday.mp3" loop />
         </div>
       ) : (
         <div className="stage fade-in">
-          <Cake
-            micStream={micStream}
-            audioRef={audioRef}
-          />
+          <Cake micStream={micStream} audioRef={audioRef} />
         </div>
       )}
     </div>
