@@ -7,35 +7,47 @@ function App() {
   const [micStream, setMicStream] = useState<MediaStream | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // 🎵 Play birthday music
-  const playMusic = () => {
-    if (!audioRef.current) {
-      const audio = new Audio("/birthday.mp3"); // place in public/
-      audio.loop = true;
-      audio.volume = 0.4;
-      audio.play();
-      audioRef.current = audio;
-    } else {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play();
+  // 🎵 Play birthday music after user interaction
+  const playMusic = async () => {
+    try {
+      if (!audioRef.current) {
+        const audio = new Audio("/birthday.mp3"); // must be in /public
+        audio.loop = true;
+        audio.volume = 0.4;
+
+        // Wait for explicit user gesture to allow playback
+        await audio.play().catch((err) => {
+          console.warn("Autoplay blocked until user interacts:", err);
+        });
+
+        audioRef.current = audio;
+      } else {
+        audioRef.current.currentTime = 0;
+        await audioRef.current.play();
+      }
+    } catch (err) {
+      console.error("Music playback error:", err);
     }
   };
 
-  // 🎙️ Enable microphone
+  // 🎙️ Enable microphone (triggered only after user tap)
   const enableMic = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       setMicStream(stream);
+      console.log("✅ Microphone enabled!");
     } catch (e) {
-      alert("Microphone permission is required to blow the candles 🎤");
-      console.error(e);
+      alert("Please allow microphone access to blow the candles 🎤");
+      console.error("Mic error:", e);
     }
   };
 
+  // 🌟 Triggered by the “Turn on the lights” button
   const handleTurnOnLights = async () => {
-    setLightsOn(true);
-    playMusic();
+    // Start both music and mic after explicit tap
+    await playMusic();
     await enableMic();
+    setLightsOn(true);
   };
 
   return (
@@ -43,9 +55,9 @@ function App() {
       {!lightsOn ? (
         <div className="landing">
           <button className="turn-on-btn" onClick={handleTurnOnLights}>
-            Turn on the lights
+            Tap to Start 🎉
           </button>
-          <p className="landing-sub">(Allow microphone when asked)</p>
+          <p className="landing-sub">(Tap to enable music & mic access)</p>
         </div>
       ) : (
         <div className="stage fade-in">
