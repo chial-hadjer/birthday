@@ -1,4 +1,3 @@
-// src/App.tsx
 import React, { useRef, useState } from "react";
 import Cake from "./components/Cake";
 import "./index.css";
@@ -6,39 +5,25 @@ import "./index.css";
 function App() {
   const [lightsOn, setLightsOn] = useState(false);
   const [micStream, setMicStream] = useState<MediaStream | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
-  // 🎵 Ensure audio element exists in DOM for mobile autoplay
-  const ensureAudioElement = () => {
-    if (!audioRef.current) {
-      const audio = new Audio("/birthday.mp3"); // must be in public/
-      audio.loop = true;
-      audio.volume = 0.4;
-      audioRef.current = audio;
-    }
-  };
-
-  // 🎙️ Handle button click: request mic, then play music, then show cake
   const handleTurnOnLights = async () => {
     try {
-      // ✅ Ensure audio element exists
-      ensureAudioElement();
-
-      // Request microphone first (must be after user tap)
+      // Request microphone first
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       setMicStream(stream);
 
-      // Now we can play music (mobile requires user gesture)
+      // Play music from DOM audio element
       if (audioRef.current) {
+        audioRef.current.currentTime = 0; // optional: start from beginning
+        audioRef.current.volume = 0.4;
+        audioRef.current.loop = true;
         await audioRef.current.play();
       }
 
-      // Finally, show the cake
       setLightsOn(true);
     } catch (err) {
-      alert(
-        "Please allow microphone access! It’s required to blow the candles 🎤"
-      );
+      alert("Microphone permission is required to blow the candles 🎤");
       console.error(err);
     }
   };
@@ -51,8 +36,8 @@ function App() {
             Turn on the lights
           </button>
           <p className="landing-sub">(Allow microphone when asked)</p>
-          {/* Hidden audio element in DOM so mobile allows playback */}
-          <audio ref={audioRef} src="/birthday.mp3" loop />
+          {/* DOM audio element is always present */}
+          <audio ref={audioRef} src="/birthday.mp3" />
         </div>
       ) : (
         <div className="stage fade-in">
