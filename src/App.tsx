@@ -9,13 +9,11 @@ function App() {
 
   const handleTurnOnLights = async () => {
     try {
-      // Request microphone first
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       setMicStream(stream);
 
-      // Play music from DOM audio element
       if (audioRef.current) {
-        audioRef.current.currentTime = 0; // optional: start from beginning
+        audioRef.current.currentTime = 0;
         audioRef.current.volume = 0.4;
         audioRef.current.loop = true;
         await audioRef.current.play();
@@ -36,8 +34,8 @@ function App() {
             Turn on the lights
           </button>
           <p className="landing-sub">(Allow microphone when asked)</p>
-          {/* DOM audio element is always present */}
-          <audio ref={audioRef} src="/birthday.mp3" />
+          {/* Add controls for debugging on mobile */}
+          <audio ref={audioRef} src="/birthday.mp3" controls />
         </div>
       ) : (
         <div className="stage fade-in">
