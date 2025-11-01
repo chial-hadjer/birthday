@@ -11,7 +11,7 @@ type Props = {
 
 export default function Cake({ micStream, audioRef, onReplayAudio }: Props) {
   const [isBlown, setIsBlown] = useState(false);
-  const [sensitivity, setSensitivity] = useState(150);
+  const [sensitivity, setSensitivity] = useState(100);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const rafRef = useRef<number | null>(null);
   const cardRef = useRef<HTMLDivElement | null>(null); // 👉 for auto-scroll
