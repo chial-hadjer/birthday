@@ -7,32 +7,28 @@ function App() {
   const [micStream, setMicStream] = useState<MediaStream | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  // First tap: get mic permission
-  const handleMicTap = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      setMicStream(stream);
-      setStep("mic");
-    } catch (err) {
-      alert("Microphone permission is required to blow the candles 🎤");
-      console.error(err);
-    }
+  // First tap: ask for mic permission
+  const handleMicTap = () => {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+        setMicStream(stream);
+        setStep("mic"); // Show second button after permission
+      })
+      .catch(err => {
+        alert("Microphone permission is required to blow the candles 🎤");
+        console.error(err);
+      });
   };
 
-  // Second tap: play audio and show cake
+  // Second tap: play music and show cake
   const handleMusicTap = async () => {
-    try {
-      if (audioRef.current) {
-        audioRef.current.currentTime = 0;
-        audioRef.current.volume = 0.4;
-        audioRef.current.loop = true;
-        await audioRef.current.play();
-      }
-      setStep("done");
-    } catch (err) {
-      alert("Could not play music! Try tapping again.");
-      console.error(err);
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.volume = 0.4;
+      audioRef.current.loop = true;
+      await audioRef.current.play();
     }
+    setStep("done");
   };
 
   return (
