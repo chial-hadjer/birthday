@@ -1,61 +1,59 @@
+// src/App.tsx
 import React, { useRef, useState } from "react";
 import Cake from "./components/Cake";
 import "./index.css";
 
 function App() {
-  const [step, setStep] = useState<"start" | "mic" | "done">("start");
-  const [micStream, setMicStream] = useState<MediaStream | null>(null);
-  const audioRef = useRef<HTMLAudioElement>(null);
+const [lightsOn, setLightsOn] = useState(false);
+const [micStream, setMicStream] = useState<MediaStream | null>(null);
+const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // First tap: ask for mic permission
-  const handleMicTap = () => {
-    navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(stream => {
-        setMicStream(stream);
-        setStep("mic"); // Show second button after permission
-      })
-      .catch(err => {
-        alert("Microphone permission is required to blow the candles 🎤");
-        console.error(err);
-      });
-  };
+// 🎙️ Enable microphone and then play music
+const handleTurnOnLights = async () => {
+try {
+// Request microphone first
+const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+setMicStream(stream);
 
-  // Second tap: play music and show cake
-  const handleMusicTap = async () => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.volume = 0.4;
-      audioRef.current.loop = true;
-      await audioRef.current.play();
-    }
-    setStep("done");
-  };
+// Only play music after mic is allowed
+if (!audioRef.current) {
+const audio = new Audio("/birthday.mp3"); // Put mp3 in public/
+audio.loop = true;
+audio.volume = 0.4;
+await audio.play();
+audioRef.current = audio;
+} else {
+audioRef.current.currentTime = 0;
+await audioRef.current.play();
+}
 
-  return (
-    <div className={`app-root ${step === "done" ? "lights-on" : "lights-off"}`}>
-      {step !== "done" ? (
-        <div className="landing">
-          {step === "start" ? (
-            <button className="turn-on-btn" onClick={handleMicTap}>
-              1. Allow microphone
-            </button>
-          ) : (
-            <button className="turn-on-btn" onClick={handleMusicTap}>
-              2. Play music & show cake
-            </button>
-          )}
-          <p className="landing-sub">
-            Tap once to allow mic, then again for music!
-          </p>
-          <audio ref={audioRef} src="/birthday.mp3" />
-        </div>
-      ) : (
-        <div className="stage fade-in">
-          <Cake micStream={micStream} audioRef={audioRef} />
-        </div>
-      )}
-    </div>
-  );
+setLightsOn(true);
+} catch (err) {
+      alert("Microphone permission is required to blow the candles 🎤");
+      alert("allow the microphone Perry! it will not kill you I promise :)");
+console.error(err);
+}
+};
+
+return (
+<div className={`app-root ${lightsOn ? "lights-on" : "lights-off"}`}>
+{!lightsOn ? (
+<div className="landing">
+<button className="turn-on-btn" onClick={handleTurnOnLights}>
+Turn on the lights
+</button>
+<p className="landing-sub">(Allow microphone when asked)</p>
+</div>
+) : (
+<div className="stage fade-in">
+<Cake
+micStream={micStream}
+audioRef={audioRef}
+/>
+</div>
+)}
+</div>
+);
 }
 
 export default App;
