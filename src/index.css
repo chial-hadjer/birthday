@@ -20,6 +20,30 @@ body {
   overflow-x: hidden;
 }
 
+.start-screen {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at center, #ffe0f0, #ffb3d9);
+}
+
+.start-btn {
+  background: #ff66b2;
+  border: none;
+  color: white;
+  padding: 1.2rem 2rem;
+  border-radius: 1rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.start-btn:hover {
+  transform: scale(1.05);
+}
+
+
 * {
   box-sizing: border-box;
 }
