@@ -29,7 +29,7 @@ function App() {
 
       setLightsOn(true);
     } catch (err) {
-      alert("Microphone permission is required to blow the candles 🎤");
+      alert("allow the microphone Perry! it will not kill you I promise :)");
       console.error(err);
     }
   };
