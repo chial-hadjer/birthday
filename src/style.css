@@ -1,0 +1,84 @@
+/* Root layout */
+.app-root {
+  width: 100vw;
+  height: 100vh;
+  transition: background 2s ease, color 1s ease;
+  overflow: hidden;
+}
+
+/* Black landing screen */
+.lights-off {
+  background: black;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* After lights on (cake scene) */
+.lights-on {
+  background: linear-gradient(to bottom, #0b0c10, #1f2833);
+  color: white;
+  animation: fadeIn 1.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Landing page content */
+.landing {
+  text-align: center;
+  animation: fadeIn 1.5s ease forwards;
+}
+
+.landing-title {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  opacity: 0.8;
+}
+
+/* The shiny glowing button */
+.turn-on-btn {
+  font-size: 1.5rem;
+  padding: 1rem 2.5rem;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(90deg, #ffcc00, #ff8800);
+  color: #000;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 0 20px rgba(255, 200, 0, 0.8);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: glow 1.5s infinite ease-in-out;
+}
+
+.turn-on-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 40px rgba(255, 200, 0, 1);
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 200, 0, 0.8); }
+  50% { box-shadow: 0 0 40px rgba(255, 200, 0, 1); }
+}
+
+.landing-sub {
+  font-size: 0.9rem;
+  color: #ccc;
+  margin-top: 1rem;
+}
+
+/* Cake stage */
+.stage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 2s ease forwards;
+}

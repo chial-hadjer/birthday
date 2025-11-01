@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- GLOBAL STYLES --- */
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  scroll-behavior: smooth;
+  overflow: hidden; /* prevent double scroll */
+  background: #062028;
+}
+
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* --- ROOT & STAGES --- */
+.app-root {
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto; /* ✅ only this scrolls now */
+  -webkit-overflow-scrolling: touch;
+  transition: background 2s ease, color 1s ease;
+}
+
+.lights-off {
+  background: black;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.lights-on {
+  background: radial-gradient(circle at center, #0b0c10 0%, #1f2833 100%);
+  color: white;
+  animation: fade-in 1.5s ease forwards;
+}
+
+.stage {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* ✅ start from top, allow scroll */
+  padding: 60px 20px 100px;
+  box-sizing: border-box;
+  animation: fade-in 2s ease forwards;
+}
+
+/* --- LANDING --- */
+.landing {
+  text-align: center;
+  animation: fade-in 1.5s ease forwards;
+}
+
+.lights-off .landing {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.landing-title {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  opacity: 0.8;
+}
+
+.turn-on-btn {
+  font-size: 1.5rem;
+  padding: 1rem 2.5rem;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(90deg, #ffcc00, #ff8800);
+  color: #000;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 0 20px rgba(255, 200, 0, 0.8);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: glow 0.5s infinite ease-in-out;
+}
+
+.turn-on-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 40px rgba(255, 200, 0, 1);
+}
+
+.landing-sub {
+  font-size: 0.9rem;
+  color: #ccc;
+  margin-top: 1rem;
+}
+
+/* --- ANIMATIONS --- */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes glow {
+  0%, 100% {
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  }
+  50% {
+    text-shadow: 0 0 40px rgba(255, 215, 0, 0.8),
+                 0 0 60px rgba(255, 215, 0, 0.6);
+  }
+}
+
+@keyframes confetti-fall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+@keyframes flame {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-3px) scale(1.05); }
+}
+
+@keyframes smoke {
+  0% { opacity: 1; transform: translateY(0) scale(0.5); }
+  100% { opacity: 0; transform: translateY(-50px) scale(1.5); }
+}
+
